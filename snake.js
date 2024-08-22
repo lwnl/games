@@ -14,20 +14,26 @@ if (process.stdin.isTTY) {
 
 let head = [19, 11];
 let headCoordinateArray = [[19, 11]];
+let currentDirection = ''
 let bodyLength = 0;
 let speed = 300; // Speed of the snake
 let n = 5; // Number of food
 let foodArray = [];
-const timers = { up: null, down: null, left: null, right: null };
+let gameInterval = null;
 
 // Listen for keypress events
 process.stdin.on('keypress', (str, key) => {
   if (['up', 'down', 'left', 'right'].includes(key.name)) {
-    closeTimersExcept(key.name);  // Close timers for other directions
+    // Only update direction and reset timer if the new direction is different from the current direction
+    if (key.name !== currentDirection) {
+      currentDirection = key.name;  // Update the current direction
+      if (gameInterval) clearInterval(gameInterval);  // Stop the current timer
 
-    if (!timers[key.name]) {  // Only start a new timer if the current direction's timer is not running
-      timers[key.name] = setInterval(() => { updateGameArea(key.name); }, speed);
+      gameInterval = setInterval(() => {
+        updateGameArea(currentDirection);
+      }, speed);
     }
+
   } else if (key.ctrl && key.name === 'c') {
     process.exit();  // Exit the program when Ctrl + C is pressed
   }
@@ -43,14 +49,6 @@ const filePath = path.join(__dirname, 'snake.md');
 initialization()
 
 // Close the timers except the current direction
-function closeTimersExcept(except) {
-  for (const direction in timers) {
-    if (direction !== except && timers[direction]) {
-      clearInterval(timers[direction]);
-      timers[direction] = null;  // reset the timer to null
-    }
-  }
-}
 
 
 // Initialize a 19x23 game area
@@ -71,7 +69,7 @@ function initialization() {
   const originalGameArea = gameArea.join('\n');
   saveGameArea(originalGameArea);
 
-  // 在19*23的矩阵内，随机生成n个食物坐标
+  // Generate random food coordinates
   foodArray = generateFood(n);
 
   // Update the game area with the food
@@ -79,24 +77,34 @@ function initialization() {
 
   console.log(`\nWelcome to the snake game! Use the arrow keys to move the snake. Speed = ${speed}ms, Number of food = ${n}\n`);
 }
-// Close all timers
-function closeAllTimers() {
-  for (const direction in timers) {
-    if (timers[direction]) {
-      clearInterval(timers[direction]); // Stop the timer
-      timers[direction] = null;         // Reset the timer to null
-    }
-  }
-}
 
 // Generate n random food coordinates within the 19x23 game area
 function generateFood(n) {
   let food = [];
-  for (let i = 0; i < n; i++) {
-    let x = Math.floor(Math.random() * 19);
-    let y = Math.floor(Math.random() * 23);
-    food.push([x, y]);
-  }
+  let x
+  let y
+  do {
+    let isPositionValid = true;
+    x = Math.floor(Math.random() * 19);
+    y = Math.floor(Math.random() * 23);
+    if (x === 19 && y === 11) {
+      isPositionValid = false;
+    }
+    for (const [fx, fy] of food) {
+      if (x === fx && y === fy) {
+        isPositionValid = false;
+        break;
+      }
+    }
+    if (isPositionValid) {
+      food.push([x, y]);
+    }
+  } while (food.length < n)
+  // for (let i = 0; i < n; i++) {
+  //   let x = Math.floor(Math.random() * 19);
+  //   let y = Math.floor(Math.random() * 23);
+  //   food.push([x, y]);
+  // }
   return food;
 }
 
@@ -122,7 +130,7 @@ function updateGameArea(direction) {
   // set the condition of game over
   // check if the snake head has hit the wall
   let hitWall = false;
-  if (x < 0 || x > 19 || y < 0 || y > 23) 
+  if (x < 0 || x > 19 || y < 0 || y > 23)
     hitWall = true;
   let hitBody = false;
   // get the current body position
@@ -130,12 +138,35 @@ function updateGameArea(direction) {
   for (let i = 0; i < bodyLength; i++) {
     bodyArray.push(headCoordinateArray[headCoordinateArray.length - 2 - i]);
   }
+
   // check if the snake head has hit the body
-  bodyArray.forEach((body) => {
-    if (body[0] === x && body[1] === y) {
+  if (bodyArray.length > 0) {
+    const [b0x, b0y] = bodyArray[0];
+    // if snake head is left to the body and direction is right
+    if (head[0] === b0x && head[1] <= b0y && direction === 'right') {
       hitBody = true;
     }
-  })
+    // if snake head is right to the body and direction is left
+    if (head[0] === b0x && head[1] >= b0y && direction === 'left') {
+      hitBody = true;
+    }
+    // if snake head is above the body and direction is down
+    if (head[0] <= b0x && head[1] === b0y && direction === 'down') {
+      hitBody = true;
+    }
+    // if snake head is below the body and direction is up
+    if (head[0] >= b0x && head[1] === b0y && direction === 'up') {
+      hitBody = true;
+    }
+  }
+  // if the snake run into itself, game over
+  for (let i = 1; i < bodyLength; i++) {
+    const [x, y] = bodyArray[i];
+    if (head[0] === x && head[1] === y) {
+      hitBody = true;
+      break;
+    }
+  }
 
   if (hitWall || hitBody)
     gameOver();
@@ -219,7 +250,7 @@ function updateGameArea(direction) {
 
 
 function gameOver() {
-  closeAllTimers()
+  clearInterval(gameInterval); // Stop the timer
   console.log('Game over!');
   process.exit();
 }
