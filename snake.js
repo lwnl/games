@@ -5,9 +5,6 @@ import readlineSync from 'readline-sync';
 import { fileURLToPath } from 'url';
 
 // set the condition of game over
-// set the condition of success
-// write the function of growingUp
-// write the function of moveBody
 
 // set the input mode of the terminal
 readline.emitKeypressEvents(process.stdin);
@@ -29,7 +26,7 @@ process.stdin.on('keypress', (str, key) => {
     closeTimersExcept(key.name);  // Close timers for other directions
 
     if (!timers[key.name]) {  // Only start a new timer if the current direction's timer is not running
-      timers[key.name] = setInterval(() => { headMove(key.name); }, speed);
+      timers[key.name] = setInterval(() => { updateGameArea(key.name); }, speed);
     }
   } else if (key.ctrl && key.name === 'c') {
     process.exit();  // Exit the program when Ctrl + C is pressed
@@ -117,146 +114,104 @@ function addFood(food) {
   saveGameArea(gameAreaArray.join('\n'));
 }
 
-// Move the snake head
 
-function headMove(direction) {
+function updateGameArea(direction) {
+
+  // check the current position of the snake head
   const [x, y] = head;
-  // Check if the snake head has eaten the food
+  // set the condition of game over
+  // check if the snake head has hit the wall
+  let hitWall = false;
+  if (x < 0 || x > 19 || y < 0 || y > 23) 
+    hitWall = true;
+  let hitBody = false;
+  // get the current body position
+  let bodyArray = []
+  for (let i = 0; i < bodyLength; i++) {
+    bodyArray.push(headCoordinateArray[headCoordinateArray.length - 2 - i]);
+  }
+  // check if the snake head has hit the body
+  bodyArray.forEach((body) => {
+    if (body[0] === x && body[1] === y) {
+      hitBody = true;
+    }
+  })
+
+  if (hitWall || hitBody)
+    gameOver();
+
+  // check if the snake head has eaten the food
   foodArray.forEach((food, index) => {
-    if (food[0] === head[0] && food[1] === head[1]) {
+    if (food[0] === x && food[1] === y) {
       foodArray.splice(index, 1);  // Remove the food that was eaten
+      if (foodArray.length === 0) {
+        console.log('Congratulations! You have eaten all the food!');
+        process.exit();
+      }
       bodyLength++
       // grow the snake body and let the body move following the head
-      buildBody(bodyLength);
     }
-  });
-  showBody();
-  // move head
-  switch (direction) {
-    case 'up':
-      // Check if moving up is within bounds
-      if (x <= 0) {
-        gameOver();
-        return;
-      }
-      updateGameArea(head, '🟨', 'up');
-      // Update the head position
-      if (x === 0) {
-        console.log('Game over!');
-        return;
-      }
-      head = [x - 1, y];
-      headCoordinateArray.push(head);
-      break;
-    case 'down':
-      // Check if moving down is within bounds
-      if (x >= 19) {
-        gameOver();
-        return;
-      }
-      updateGameArea(head, '🟨', 'down');
-      // Update the head position
-      if (x === 19) {
-        console.log('Game over!');
-        return;
-      }
-      head = [x + 1, y];
-      headCoordinateArray.push(head);
-      break;
-    case 'left':
-      // Check if moving left is within bounds
-      if (y <= 0) {
-        gameOver();
-        return;
-      }
-      updateGameArea(head, '🟨', 'left');
-      // Update the head position
-      if (y === 0) {
-        console.log('Game over!');
-        return;
-      }
-      head = [x, y - 1];
-      headCoordinateArray.push(head);
-      break;
-    case 'right':
-      // Check if moving right is within bounds
-      if (y >= 22) {
-        gameOver();
-        return;
-      }
-      updateGameArea(head, '🟨', 'right');
-      // Update the head position
-      if (y === 22) {
-        console.log('Game over!');
-        return;
-      }
-      head = [x, y + 1];
-      headCoordinateArray.push(head);
-      break;
-    default:
-      break;
+  })
+
+  // show position of next round
+
+  // calculate the position of the snake head for next round
+  if (direction === 'up') {
+    head = [x - 1, y];
+  } else if (direction === 'down') {
+    head = [x + 1, y];
+  } else if (direction === 'left') {
+    head = [x, y - 1];
+  } else if (direction === 'right') {
+    head = [x, y + 1];
   }
-}
+  // save the position of the snake head for next round
+  headCoordinateArray.push(head);
 
-function buildBody(length) {
-  // Grow the snake body
-  let bodyArray = [];
-  for (let i = 0; i < length; i++) {
-
+  // calculate the position of the snake body for next round
+  let bodyArrayNextRound = []
+  for (let i = 0; i < bodyLength; i++) {
+    // save the position of the snake body for next round
+    bodyArrayNextRound.push(headCoordinateArray[headCoordinateArray.length - 2 - i]);
   }
-  let lastBody = headCoordinateArray[headCoordinateArray.length - 2];
-  let lastBodyRow = lastBody[0];
-  let lastBodyColumn = lastBody[1];
-  let lastBodySign = '🟨';
-  updateGameArea(lastBody, lastBodySign, 'up');
-  headCoordinateArray.pop();
-  headCoordinateArray.push([lastBodyRow, lastBodyColumn]);
-}
 
-function moveBody() {
-  // Move the snake body
 
-}
-
-function updateGameArea(movingPoint, sign, direction) {
-  const [x, y] = movingPoint;
 
   // Read the game area from the file
   let gameArea = readFileSync(filePath, 'utf8');
   let gameAreaArray = gameArea.split('\n');
 
-  // Clear the current position of the snake head
-  let movingPointRow = splitIntoChunks(gameAreaArray[x], 2);
-  movingPointRow[y] = '⬜️';
-  gameAreaArray[x] = movingPointRow.join('');
-
-  // Update the new position of the snake head
-  let nextMovingPointRow
-  switch (direction) {
-    case 'up':
-      nextMovingPointRow = splitIntoChunks(gameAreaArray[x - 1], 2);
-      nextMovingPointRow[y] = sign;
-      gameAreaArray[x - 1] = nextMovingPointRow.join('');
-      break;
-    case 'down':
-      nextMovingPointRow = splitIntoChunks(gameAreaArray[x + 1], 2);
-      nextMovingPointRow[y] = sign;
-      gameAreaArray[x + 1] = nextMovingPointRow.join('');
-      break;
-    case 'left':
-      nextMovingPointRow = splitIntoChunks(gameAreaArray[x], 2);
-      nextMovingPointRow[y - 1] = sign;
-      gameAreaArray[x] = nextMovingPointRow.join('');
-      break;
-    case 'right':
-      nextMovingPointRow = splitIntoChunks(gameAreaArray[x], 2);
-      nextMovingPointRow[y + 1] = sign;
-      gameAreaArray[x] = nextMovingPointRow.join('');
-      break;
-    default:
-      break;
+  // replace all positions with '⬜️'
+  for (let i = 0; i < 20; i++) {
+    let row = splitIntoChunks(gameAreaArray[i], 2);
+    for (let j = 0; j < 23; j++) {
+      row[j] = '⬜️';
+    }
+    gameAreaArray[i] = row.join('');
   }
 
+
+  // show Game interface for next round
+  // show snake head
+  const hx = head[0];
+  const hy = head[1];
+  let headRowNextRound = splitIntoChunks(gameAreaArray[hx], 2);
+  headRowNextRound[hy] = '🟨';
+  gameAreaArray[hx] = headRowNextRound.join('');
+
+  // show snake body
+  for (const [x, y] of bodyArrayNextRound) {
+    let bodyRowNextRound = splitIntoChunks(gameAreaArray[x], 2);
+    bodyRowNextRound[y] = '🟫';
+    gameAreaArray[x] = bodyRowNextRound.join('');
+  }
+
+  // show food
+  for (const [x, y] of foodArray) {
+    let foodRowNextRound = splitIntoChunks(gameAreaArray[x], 2);
+    foodRowNextRound[y] = '🍎';
+    gameAreaArray[x] = foodRowNextRound.join('');
+  }
 
   // Save the updated game area
   saveGameArea(gameAreaArray.join('\n'));
@@ -266,8 +221,6 @@ function updateGameArea(movingPoint, sign, direction) {
 function gameOver() {
   closeAllTimers()
   console.log('Game over!');
-  console.log('foodArray:', foodArray);
-  console.log('Your score:', headCoordinateArray.length);
   process.exit();
 }
 
