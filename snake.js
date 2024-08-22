@@ -121,6 +121,17 @@ function addFood(food) {
 
 function headMove(direction) {
   const [x, y] = head;
+  // Check if the snake head has eaten the food
+  foodArray.forEach((food, index) => {
+    if (food[0] === head[0] && food[1] === head[1]) {
+      foodArray.splice(index, 1);  // Remove the food that was eaten
+      bodyLength++
+      // grow the snake body and let the body move following the head
+      buildBody(bodyLength);
+    }
+  });
+  showBody();
+  // move head
   switch (direction) {
     case 'up':
       // Check if moving up is within bounds
@@ -185,16 +196,26 @@ function headMove(direction) {
     default:
       break;
   }
-  // Check if the snake head has eaten the food
-  foodArray.forEach((food, index) => {
-    if (food[0] === head[0] && food[1] === head[1]) {
-      foodArray.splice(index, 1);  // Remove the food that was eaten
-      bodyLength++
-      // grow the snake body and let the body move following the head
-      // growingUp()
-      // moveBody()
-    }
-  });
+}
+
+function buildBody(length) {
+  // Grow the snake body
+  let bodyArray = [];
+  for (let i = 0; i < length; i++) {
+
+  }
+  let lastBody = headCoordinateArray[headCoordinateArray.length - 2];
+  let lastBodyRow = lastBody[0];
+  let lastBodyColumn = lastBody[1];
+  let lastBodySign = '🟨';
+  updateGameArea(lastBody, lastBodySign, 'up');
+  headCoordinateArray.pop();
+  headCoordinateArray.push([lastBodyRow, lastBodyColumn]);
+}
+
+function moveBody() {
+  // Move the snake body
+
 }
 
 function updateGameArea(movingPoint, sign, direction) {

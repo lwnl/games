@@ -4,7 +4,7 @@
   "main": "chess.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon chess.js",
+    "dev": "nodemon snake.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
