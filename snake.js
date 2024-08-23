@@ -130,7 +130,7 @@ function updateGameArea(direction) {
   // set the condition of game over
   // check if the snake head has hit the wall
   let hitWall = false;
-  if (x < 0 || x > 19 || y < 0 || y > 23)
+  if (x < 0 || x > 19 || y < 0 || y > 22)
     hitWall = true;
   let hitBody = false;
   // get the current body position
@@ -188,13 +188,13 @@ function updateGameArea(direction) {
 
   // calculate the position of the snake head for next round
   if (direction === 'up') {
-    head = [x - 1, y];
+    head = [x - 1, y] 
   } else if (direction === 'down') {
-    head = [x + 1, y];
+    head = [x + 1, y] 
   } else if (direction === 'left') {
-    head = [x, y - 1];
+    head = [x, y - 1] 
   } else if (direction === 'right') {
-    head = [x, y + 1];
+    head = [x, y + 1] 
   }
   // save the position of the snake head for next round
   headCoordinateArray.push(head);
@@ -203,7 +203,11 @@ function updateGameArea(direction) {
   let bodyArrayNextRound = []
   for (let i = 0; i < bodyLength; i++) {
     // save the position of the snake body for next round
-    bodyArrayNextRound.push(headCoordinateArray[headCoordinateArray.length - 2 - i]);
+    if (head[0] < 0 || head[0] > 19 || head[1] < 0 || head[1] > 22) {
+      bodyArrayNextRound.push(headCoordinateArray[headCoordinateArray.length - 3 - i]);
+    } else {
+      bodyArrayNextRound.push(headCoordinateArray[headCoordinateArray.length - 2 - i]);
+    }
   }
 
 
@@ -224,8 +228,18 @@ function updateGameArea(direction) {
 
   // show Game interface for next round
   // show snake head
-  const hx = head[0];
-  const hy = head[1];
+  let hx = head[0];
+  if (hx < 0) {
+    hx = 0;
+  } else if (hx > 19) {
+    hx = 19;
+  } 
+  let hy = head[1];
+  if (hy < 0) {
+    hy = 0;
+  } else if (hy > 22) {
+    hy = 22;
+  }
   let headRowNextRound = splitIntoChunks(gameAreaArray[hx], 2);
   headRowNextRound[hy] = '🟨';
   gameAreaArray[hx] = headRowNextRound.join('');
@@ -257,7 +271,9 @@ function gameOver() {
 
 // Split a string into chunks of a specific size
 function splitIntoChunks(str, chunkSize) {
+  console.log(str)
   let result = [];
+  
   for (let i = 0; i < str.length; i += chunkSize) {
     result.push(str.slice(i, i + chunkSize));
   }
