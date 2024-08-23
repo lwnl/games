@@ -1,5 +1,6 @@
 import inquirer from 'inquirer';
 import chess from './chess.js'; 
+import {RandomNumberGame} from "./casino.js";
 
 // Define the menu options
 const menuOptions = [
@@ -11,6 +12,7 @@ const menuOptions = [
       '1 - Chess',
       '2 - Othello',
       '3 - Greedy snake',
+      '4 - casino',
       'Exit'
     ]
   }
@@ -29,6 +31,13 @@ inquirer.prompt(menuOptions).then(answers => {
     case '3 - Greedy snake':
       console.log('You chose Greedy snake.');
       // Add code here to run Greedy snake
+      break;
+    case 'Exit':
+      console.log('Exiting...');
+      break;
+      case '4 - casino':
+      const randomNumberGame = new RandomNumberGame();
+      randomNumberGame.start();  // Start the game
       break;
     case 'Exit':
       console.log('Exiting...');

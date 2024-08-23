@@ -1,2 +1,2 @@
-keypress events
-process.stdin.o
+
+    case '3 - Greedy snake':
