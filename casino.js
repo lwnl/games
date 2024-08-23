@@ -39,7 +39,7 @@ export class RandomNumberGame {
 
     console.log(
       chalk.cyan(
-        `         ${emojis[this.numbers[0]]}   ║   ${emojis[this.numbers[1]]}   ║   ${emojis[this.numbers[2]]}  `
+        `       ${emojis[this.numbers[0]]}   ║   ${emojis[this.numbers[1]]}   ║   ${emojis[this.numbers[2]]}  `
       )
     );
     console.log(chalk.yellow.bold("╚═════════════════════════════════╝"));
