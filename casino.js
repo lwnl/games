@@ -79,7 +79,8 @@ export class RandomNumberGame {
           }
           console.log(chalk.green.bold(`
 🎉 JACKPOT! You won! bankroll + ${bonus} 🎉
-Your bankroll is ${this.bankroll}, bet : ${bet}`));
+Your bankroll is ${this.bankroll}, bet : ${bet}
+`));
           this.gameOver = true;
           this.askRestart(bet);
         } else {
