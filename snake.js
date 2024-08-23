@@ -209,9 +209,6 @@ function updateGameArea(direction) {
       bodyArrayNextRound.push(headCoordinateArray[headCoordinateArray.length - 2 - i]);
     }
   }
-
-
-
   // Read the game area from the file
   let gameArea = readFileSync(filePath, 'utf8');
   let gameAreaArray = gameArea.split('\n');
