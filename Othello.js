@@ -69,21 +69,24 @@ function playAndSave(player) {
     chess = '⚪️';
   }
 
-  showPossibleMoves(chess)
+  const possibleMovesArray = showPossibleMoves(chess)
 
   console.log(`
 Hi, ${player}, your chess color is ${chess}, it's your turn!`);
-
-
 
   do {
     do {
       if (!validMove) {
         console.log('Invalid move! Please try again.');
       }
-      const position = rs.question('Please enter the row and column coordinates: ').replace(/\s+/g, '');
-      validation = validatePosition(position)
-      validMove = validation.validMove;
+      if (player !== 'Computer') {
+        // console.log('Possible moves: ', possibleMovesArray)
+        const position = rs.question('Please enter the row and column coordinates: ').replace(/\s+/g, '');
+        validation = validatePosition(position)
+        validMove = validation.validMove;
+      } else {
+
+      }
     } while (!validMove);
 
 
@@ -106,7 +109,7 @@ function showPossibleMoves(chess) {
   let chessboardRows = chessboard.split(' ').join('')
   let chessboardRowsArray = chessboardRows.split('\n');
   chessboardRowsArray.pop(); // Remove the last row
-  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|⬛️/g, '.'));
+  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔘/g, '.'));
   const currentChessNumber = chess === '🟤' ? '1' : '2';
   const opponentChessNumber = currentChessNumber === '1' ? '2' : '1';
 
@@ -163,6 +166,7 @@ function showPossibleMoves(chess) {
         column += dc;
       }
     }
+
   }
 
   // put the possible moves into checkArray, possible moves are marked as '3'
@@ -172,11 +176,12 @@ function showPossibleMoves(chess) {
     checkArray[r] = checkArray[r].join('');
   })
 
-  console.log('checkArray = ', checkArray)  
 
   // turn the checkArray to a chessboardArray
   const chessboardString = convertCheckArrayToChessboard(checkArray)
   saveChessboard(chessboardString)
+
+  return possibleMoves
 }
 
 function checkChess(checkArray, currentNumber) {
@@ -232,7 +237,7 @@ function checkChess(checkArray, currentNumber) {
 
 function convertCheckArrayToChessboard(checkArray) {
   checkArray.push(' A  B  C  D  E  F  G  H')
-  const chessboard = checkArray.map(row => row.replace(/1/g, '🟤 ').replace(/2/g, '⚪️ ').replace(/3/g, '⬛️ ').replace(/\./g, '🟩 ')).join('\n');
+  const chessboard = checkArray.map(row => row.replace(/1/g, '🟤 ').replace(/2/g, '⚪️ ').replace(/3/g, '🔘 ').replace(/\./g, '🟩 ')).join('\n');
   return chessboard
 }
 
@@ -240,7 +245,7 @@ function followRules(chessboard, chess) {
   const chessboardRows = chessboard.split(' ').join('')
   const chessboardRowsArray = chessboardRows.split('\n');
   chessboardRowsArray.pop(); // Remove the last row
-  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩/g, '.'));
+  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔘/g, '.'));
   const chessNumber = chess === '🟤' ? '1' : '2';
 
   return checkChess(checkArray, chessNumber)
