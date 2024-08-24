@@ -42,7 +42,7 @@ saveChessboard(originalChessboard)
 // input player name
 console.log('\nWelcome to the chess game!');
 const player_1 = rs.question('Please enter name of Player_1: ');
-const player_2 = rs.question('Please enter name of Player_2, press enter to play with computer: ');
+let player_2 = rs.question('Please enter name of Player_2, press enter to play with computer: ');
 if (player_2 === '') {
   player_2 = 'Computer';
 }
@@ -85,7 +85,8 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
         validation = validatePosition(position)
         validMove = validation.validMove;
       } else {
-
+        validation = findBestMove(possibleMovesArray)
+        validMove = true;
       }
     } while (!validMove);
 
@@ -101,6 +102,26 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
 
   const chessboardString = convertCheckArrayToChessboard(validMove)// validMove is a 2D array of the chessboard
   saveChessboard(chessboardString)
+}
+
+function findBestMove(possibleMovesArray) {
+  const itemRepeatedTimesArray = possibleMovesArray.map(item => {
+    let count = 0;
+    for (let i = 0; i < possibleMovesArray.length; i++) {
+      if (possibleMovesArray[i][0] === item[0] && possibleMovesArray[i][1] === item[1]) {
+        count++;
+      }
+    }
+    return count
+  })
+
+  const maxRepeatedTimes = Math.max(...itemRepeatedTimesArray)
+  const bestMoveIndex = itemRepeatedTimesArray.indexOf(maxRepeatedTimes)
+  const bestMove = possibleMovesArray[bestMoveIndex]
+  return {
+    row: bestMove[0] + 1,
+    column: 'abcdefgh'[bestMove[1]]
+  }
 }
 
 function showPossibleMoves(chess) {
