@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 // Use absolute path
 const filePath = path.join(__dirname, 'Othello.md');
 
-let rounds = 20
+let rounds = 5
 
 
 // initialize a 8x8 chessboard
@@ -43,8 +43,11 @@ saveChessboard(originalChessboard)
 
 // input player name
 console.log('\nWelcome to the chess game!');
-const player_1 = rs.question('Please enter name of Player_1: ');
+let player_1 = rs.question('Please enter name of Player_1, press enter to play with computer: ');
 let player_2 = rs.question('Please enter name of Player_2, press enter to play with computer: ');
+if (player_1 === '') {
+  player_1 = 'Computer';
+}
 if (player_2 === '') {
   player_2 = 'Computer';
 }
@@ -59,6 +62,25 @@ while (playedRounds < rounds) {
   // Player 2's move
   playAndSave(player_2);
   playedRounds++;
+}
+
+gameOver();
+
+function gameOver() {
+  // read the chessboard from the file
+  const chessboard = readFileSync(filePath, 'utf8');
+  // count the number of chess '🟤' 
+  const player1Chess = chessboard.split('🟤').length - 1;
+  // count the number of chess '⚪️'
+  const player2Chess = chessboard.split('⚪️').length - 1;
+  
+  if (player1Chess > player2Chess)  {
+    console.log(`🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, 🟤 wins!`)
+  } else if (player1Chess < player2Chess)  {
+    console.log(`🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, ⚪️ wins!`)
+  } else {
+    console.log(`🟤 = ${player1Chess}, ⚪️ = ${player2Chess}`)
+  }
 }
 
 function playAndSave(player) {
