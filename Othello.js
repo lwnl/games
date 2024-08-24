@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 // Use absolute path
 const filePath = path.join(__dirname, 'Othello.md');
 
-let rounds = 2
+let rounds = 20
 
 
 // initialize a 8x8 chessboard
@@ -47,10 +47,15 @@ let player_1 = rs.question('Please enter name of Player_1, press enter to play w
 let player_2 = rs.question('Please enter name of Player_2, press enter to play with computer: ');
 if (player_1 === '') {
   player_1 = 'Computer';
-}
+  if (player_2 === '') {
+    player_2 = 'Computer_2';
+  }
+} 
+
 if (player_2 === '') {
   player_2 = 'Computer';
 }
+
 
 let positionArray = ['4d', '4e', '5d', '5e'];
 // Main game loop
@@ -73,7 +78,7 @@ function gameOver() {
   const player1Chess = chessboard.split('🟤').length - 1;
   // count the number of chess '⚪️'
   const player2Chess = chessboard.split('⚪️').length - 1;
-
+  playedRounds -= 1;
   if (player1Chess > player2Chess) {
     console.log(`
 After ${playedRounds} rounds,
@@ -116,7 +121,7 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
       if (!validMove) {
         console.log('Invalid move! Please try again.');
       }
-      if (player !== 'Computer') {
+      if (!player.includes('Computer')) {
         // console.log('Possible moves: ', possibleMovesArray)
         const position = rs.question('Please enter the row and column coordinates: ').replace(/\s+/g, '');
         validation = validatePosition(position)
@@ -124,7 +129,7 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
       } else {
         const possibleMovesArray = resultOfPossibleMoves.possibleMoves
         const checkArray = resultOfPossibleMoves.checkArray
-        validation = findBestMove(possibleMovesArray, checkArray)
+        validation = findBestMove(possibleMovesArray, checkArray, chess)
         validMove = true;
       }
     } while (!validMove);
@@ -142,13 +147,14 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
   saveChessboard(chessboardString)
 }
 
-function findBestMove(possibleMovesArray, checkArray) {
+function findBestMove(possibleMovesArray, checkArray, chess) {
+  chess = chess === '🟤' ? '1' : '2';
 
   const positionArray = possibleMovesArray.map(move => (move[0] + 1) + 'abcdefgh'[move[1]])
 
   const turnedQuantityForEach = positionArray.map(move => {
     // console.log('checkArray: ', checkArray, 'move: ', move)
-    return checkChess(checkArray, '2', move).turnedQuantity
+    return checkChess(checkArray, chess, move).turnedQuantity
   })
   console.log('positionArray: ', positionArray)
   console.log('turnedQuantityForEach: ', turnedQuantityForEach)
