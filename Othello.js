@@ -158,7 +158,12 @@ function findBestMove(possibleMovesArray, checkArray, chess) {
   })
   console.log('positionArray: ', positionArray)
   console.log('turnedQuantityForEach: ', turnedQuantityForEach)
-  const bestMove = possibleMovesArray[turnedQuantityForEach.indexOf(Math.max(...turnedQuantityForEach))]
+  const maxTurnedQuantity = Math.max(...turnedQuantityForEach)
+  const maxTurnedQuantityIndexArray = turnedQuantityForEach.map((quantity, index) => quantity === maxTurnedQuantity ? index : null).filter(index => index !== null)
+  const randomIndex = Math.floor(Math.random() * maxTurnedQuantityIndexArray.length)
+  const bestMoveIndex = maxTurnedQuantityIndexArray[randomIndex]
+  const bestMove = possibleMovesArray[bestMoveIndex]
+  console.log('bestMoveIndex:',bestMoveIndex,', best move coordinates: ',(bestMove[0] + 1) + 'abcdefgh'[bestMove[1]],', quantity of turned: ', turnedQuantityForEach[bestMoveIndex])
   return {
     row: bestMove[0] + 1,
     column: 'abcdefgh'[bestMove[1]]
