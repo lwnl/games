@@ -65,7 +65,7 @@ function playAndSave(player) {
   let chess, validation
   let validMove = true;
 
-  
+
   if (player === player_1) {
     chess = '🟤';
   }
@@ -73,7 +73,8 @@ function playAndSave(player) {
     chess = '⚪️';
   }
 
-  const possibleMovesArray = showPossibleMoves(chess)
+  const resultOfPossibleMoves = showPossibleMoves(chess)
+
 
   console.log(`
 Hi, ${player}, your chess color is ${chess}, it's your turn!`);
@@ -89,11 +90,12 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
         validation = validatePosition(position)
         validMove = validation.validMove;
       } else {
-        validation = findBestMove(possibleMovesArray)
+        const possibleMovesArray = resultOfPossibleMoves.possibleMoves
+        const checkArray = resultOfPossibleMoves.checkArray
+        validation = findBestMove(possibleMovesArray, checkArray)
         validMove = true;
       }
     } while (!validMove);
-
 
     const rowNumber = validation.row;
     const columnLetter = validation.column;
@@ -108,20 +110,17 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
   saveChessboard(chessboardString)
 }
 
-function findBestMove(possibleMovesArray) {
-  const itemRepeatedTimesArray = possibleMovesArray.map(item => {
-    let count = 0;
-    for (let i = 0; i < possibleMovesArray.length; i++) {
-      if (possibleMovesArray[i][0] === item[0] && possibleMovesArray[i][1] === item[1]) {
-        count++;
-      }
-    }
-    return count
-  })
+function findBestMove(possibleMovesArray, checkArray) {
 
-  const maxRepeatedTimes = Math.max(...itemRepeatedTimesArray)
-  const bestMoveIndex = itemRepeatedTimesArray.indexOf(maxRepeatedTimes)
-  const bestMove = possibleMovesArray[bestMoveIndex]
+  const positionArray = possibleMovesArray.map(move => (move[0] + 1) + 'abcdefgh'[move[1]])
+
+  const turnedQuantityForEach = positionArray.map(move => {
+    // console.log('checkArray: ', checkArray, 'move: ', move)
+    return checkChess(checkArray, '2', move).turnedQuantity
+  })
+  console.log('positionArray: ', positionArray)
+  console.log('turnedQuantityForEach: ', turnedQuantityForEach)
+  const bestMove = possibleMovesArray[turnedQuantityForEach.indexOf(Math.max(...turnedQuantityForEach))]
   return {
     row: bestMove[0] + 1,
     column: 'abcdefgh'[bestMove[1]]
@@ -171,28 +170,25 @@ function showPossibleMoves(chess) {
       let foundEmpty = false;
       while (row >= 0 && row < 8 && column >= 0 && column < 8) {
         if (checkArray[row][column] === opponentChessNumber) {
-          do {
-            row += dr;
-            column += dc;
-            if (row >= 0 && row < 8 && column >= 0 && column < 8) {
-              if (checkArray[row][column] === opponentChessNumber) {
-                continue;
-              } else if (checkArray[row][column] === '.') {
-                foundEmpty = true;
-                possibleMoves.push([row, column])
-                break;
-              }
-            } else {
-              break;
-            }
-          } while (true)
-        } 
+          foundOpponentChessNumber = true;
+        } else if (checkArray[row][column] === currentChessNumber) {
+          if (foundOpponentChessNumber) {
+            break;
+          }
+        } else if (checkArray[row][column] === '.') {
+          if (foundOpponentChessNumber) {
+            possibleMoves.push([row, column]);
+            break;
+          }
+        }
         row += dr;
         column += dc;
       }
     }
 
   }
+
+  const checkArrayWithout3 = structuredClone(checkArray)
 
   // put the possible moves into checkArray, possible moves are marked as '3'
   possibleMoves.forEach(([r, c]) => {
@@ -206,17 +202,22 @@ function showPossibleMoves(chess) {
   const chessboardString = convertCheckArrayToChessboard(checkArray)
   saveChessboard(chessboardString)
 
-  return possibleMoves
+  return {
+    possibleMoves,
+    checkArray: checkArrayWithout3
+  }
 }
 
-function checkChess(checkArray, currentNumber) {
+function checkChess(checkArray, currentNumber, position = positionArray[positionArray.length - 1]) {
   const opponentNumber = currentNumber === '1' ? '2' : '1';
-  const position = positionArray[positionArray.length - 1];
   const rowNumber = Number(position[0]) - 1;
   const columnNumber = 'abcdefgh'.indexOf(position[1]);
   checkArray = checkArray.map(row => row.split(''));
+  checkArray[rowNumber][columnNumber] = currentNumber;
+  // console.log('position from checkChess: ', position)
+  // console.log('checkArray from checkChess: ', checkArray.map(row => row.join('')))
+  // console.log('position: ', position)
 
-  let positionsToTurn = [];
 
   const directions = [
     { dr: -1, dc: 0 },  // up
@@ -229,7 +230,9 @@ function checkChess(checkArray, currentNumber) {
     { dr: 1, dc: 1 }    // down-right
   ];
 
+  let chessTurnedQuantity = 0;
   for (const { dr, dc } of directions) {
+    let positionsToTurn = [];
     let r = rowNumber + dr;
     let c = columnNumber + dc;
     let foundOtherChess = false;
@@ -240,25 +243,29 @@ function checkChess(checkArray, currentNumber) {
         positionsToTurn.push([r, c]);
       } else if (checkArray[r][c] === currentNumber) {
         if (foundOtherChess) {
+          chessTurnedQuantity += positionsToTurn.length;
           for (const [tr, tc] of positionsToTurn) {
             checkArray[tr][tc] = currentNumber;
           }
         }
         break;
-      } else {
-        break;
       }
+
+
       r += dr;
       c += dc;
     }
   }
-  if (positionsToTurn.length === 0) {
+  if (chessTurnedQuantity === 0) {
+    console.log('chessTurnedQuantity: ', chessTurnedQuantity)
     positionArray.pop();
     return false;
   } else {
+    // console.log('chessTurnedQuantity: ', chessTurnedQuantity)
     return {
+
       checkArray: checkArray.map(row => row.join('')),
-      bestMove: []
+      turnedQuantity: chessTurnedQuantity
     }
   }
 }
