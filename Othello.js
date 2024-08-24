@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 // Use absolute path
 const filePath = path.join(__dirname, 'Othello.md');
 
-let rounds = 20
+let rounds = 5
 
 
 // initialize a 8x8 chessboard
@@ -43,8 +43,8 @@ saveChessboard(originalChessboard)
 
 // input player name
 console.log('\nWelcome to the chess game!');
-let player_1 = rs.question('Please enter name of Player_1, press enter to play with computer: ');
-let player_2 = rs.question('Please enter name of Player_2, press enter to play with computer: ');
+let player_1 = rs.question('Please enter name of Player_1, press enter to work as computer: ');
+let player_2 = rs.question('Please enter name of Player_2, press enter to work as computer: ');
 if (player_1 === '') {
   player_1 = 'Computer';
   if (player_2 === '') {
