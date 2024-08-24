@@ -256,7 +256,10 @@ function checkChess(checkArray, currentNumber) {
     positionArray.pop();
     return false;
   } else {
-    return checkArray.map(row => row.join(''));
+    return {
+      checkArray: checkArray.map(row => row.join('')),
+      bestMove: []
+    }
   }
 }
 
@@ -273,7 +276,7 @@ function followRules(chessboard, chess) {
   let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔹/g, '.'));
   const chessNumber = chess === '🟤' ? '1' : '2';
 
-  return checkChess(checkArray, chessNumber)
+  return checkChess(checkArray, chessNumber).checkArray
 }
 
 
