@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 // Use absolute path
 const filePath = path.join(__dirname, 'Othello.md');
 
-let rounds = 5
+let rounds = 2
 
 
 // initialize a 8x8 chessboard
@@ -54,8 +54,8 @@ if (player_2 === '') {
 
 let positionArray = ['4d', '4e', '5d', '5e'];
 // Main game loop
-let playedRounds = 0;
-while (playedRounds < rounds) {
+let playedRounds = 1;
+while (playedRounds <= rounds) {
   // Player 1's move
   playAndSave(player_1);
 
@@ -73,13 +73,22 @@ function gameOver() {
   const player1Chess = chessboard.split('🟤').length - 1;
   // count the number of chess '⚪️'
   const player2Chess = chessboard.split('⚪️').length - 1;
-  
-  if (player1Chess > player2Chess)  {
-    console.log(`🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, 🟤 wins!`)
-  } else if (player1Chess < player2Chess)  {
-    console.log(`🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, ⚪️ wins!`)
+
+  if (player1Chess > player2Chess) {
+    console.log(`
+After ${playedRounds} rounds,
+🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, 
+🟤 wins!`)
+  } else if (player1Chess < player2Chess) {
+    console.log(`
+After ${playedRounds} rounds,
+🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, 
+⚪️ wins!`)
   } else {
-    console.log(`🟤 = ${player1Chess}, ⚪️ = ${player2Chess}`)
+    console.log(`
+After ${playedRounds} rounds,
+🟤 = ${player1Chess}, ⚪️ = ${player2Chess}, 
+It's a tie!`)
   }
 }
 
@@ -99,6 +108,7 @@ function playAndSave(player) {
 
 
   console.log(`
+round ${playedRounds}
 Hi, ${player}, your chess color is ${chess}, it's your turn!`);
 
   do {
