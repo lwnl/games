@@ -12,6 +12,8 @@ const __dirname = path.dirname(__filename);
 // Use absolute path
 const filePath = path.join(__dirname, 'Othello.md');
 
+let rounds = 20
+
 
 // initialize a 8x8 chessboard
 let chessboard = [];
@@ -49,12 +51,14 @@ if (player_2 === '') {
 
 let positionArray = ['4d', '4e', '5d', '5e'];
 // Main game loop
-while (true) {
+let playedRounds = 0;
+while (playedRounds < rounds) {
   // Player 1's move
   playAndSave(player_1);
 
   // Player 2's move
   playAndSave(player_2);
+  playedRounds++;
 }
 
 function playAndSave(player) {
@@ -130,7 +134,7 @@ function showPossibleMoves(chess) {
   let chessboardRows = chessboard.split(' ').join('')
   let chessboardRowsArray = chessboardRows.split('\n');
   chessboardRowsArray.pop(); // Remove the last row
-  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔘/g, '.'));
+  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔹/g, '.'));
   const currentChessNumber = chess === '🟤' ? '1' : '2';
   const opponentChessNumber = currentChessNumber === '1' ? '2' : '1';
 
@@ -258,7 +262,7 @@ function checkChess(checkArray, currentNumber) {
 
 function convertCheckArrayToChessboard(checkArray) {
   checkArray.push(' A  B  C  D  E  F  G  H')
-  const chessboard = checkArray.map(row => row.replace(/1/g, '🟤 ').replace(/2/g, '⚪️ ').replace(/3/g, '🔘 ').replace(/\./g, '🟩 ')).join('\n');
+  const chessboard = checkArray.map(row => row.replace(/1/g, '🟤 ').replace(/2/g, '⚪️ ').replace(/3/g, '🔹 ').replace(/\./g, '🟩 ')).join('\n');
   return chessboard
 }
 
@@ -266,7 +270,7 @@ function followRules(chessboard, chess) {
   const chessboardRows = chessboard.split(' ').join('')
   const chessboardRowsArray = chessboardRows.split('\n');
   chessboardRowsArray.pop(); // Remove the last row
-  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔘/g, '.'));
+  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|🔹/g, '.'));
   const chessNumber = chess === '🟤' ? '1' : '2';
 
   return checkChess(checkArray, chessNumber)
