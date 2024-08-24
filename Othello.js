@@ -41,8 +41,11 @@ saveChessboard(originalChessboard)
 
 // input player name
 console.log('\nWelcome to the chess game!');
-const player_1 = rs.question('Please enter name of Player_1:');
-const player_2 = rs.question('Please enter name of Player_2:');
+const player_1 = rs.question('Please enter name of Player_1: ');
+const player_2 = rs.question('Please enter name of Player_2, press enter to play with computer: ');
+if (player_2 === '') {
+  player_2 = 'Computer';
+}
 
 let positionArray = ['4d', '4e', '5d', '5e'];
 // Main game loop
@@ -57,14 +60,21 @@ while (true) {
 function playAndSave(player) {
   let chess, validation
   let validMove = true;
+
+  
   if (player === player_1) {
     chess = '🟤';
   }
   if (player === player_2) {
     chess = '⚪️';
   }
+
+  showPossibleMoves(chess)
+
   console.log(`
 Hi, ${player}, your chess color is ${chess}, it's your turn!`);
+
+
 
   do {
     do {
@@ -87,6 +97,85 @@ Hi, ${player}, your chess color is ${chess}, it's your turn!`);
   } while (!validMove)
 
   const chessboardString = convertCheckArrayToChessboard(validMove)// validMove is a 2D array of the chessboard
+  saveChessboard(chessboardString)
+}
+
+function showPossibleMoves(chess) {
+  // turn the chessboard to a checkArray
+  let chessboard = readFileSync(filePath, 'utf8');
+  let chessboardRows = chessboard.split(' ').join('')
+  let chessboardRowsArray = chessboardRows.split('\n');
+  chessboardRowsArray.pop(); // Remove the last row
+  let checkArray = chessboardRowsArray.map(row => row.replace(/🟤/g, '1').replace(/⚪️/g, '2').replace(/🟩|⬛️/g, '.'));
+  const currentChessNumber = chess === '🟤' ? '1' : '2';
+  const opponentChessNumber = currentChessNumber === '1' ? '2' : '1';
+
+
+  // find all the location of the current chess, put them into an array
+
+  const currentChessLocationArray = []
+  checkArray.forEach((row, rowIndex) => {
+    row.split('').forEach((chess, columnIndex) => {
+      if (chess === currentChessNumber) {
+        currentChessLocationArray.push([rowIndex, columnIndex])
+      }
+    })
+  })
+
+  // find all the possible moves
+  const possibleMoves = []
+  const directions = [
+    { dr: -1, dc: 0 },  // up
+    { dr: 1, dc: 0 },   // down
+    { dr: 0, dc: -1 },  // left
+    { dr: 0, dc: 1 },   // right
+    { dr: -1, dc: -1 }, // up-left
+    { dr: -1, dc: 1 },  // up-right
+    { dr: 1, dc: -1 },  // down-left
+    { dr: 1, dc: 1 }    // down-right
+  ];
+
+  for (const [r, c] of currentChessLocationArray) {
+    for (const { dr, dc } of directions) {
+      let row = r + dr;
+      let column = c + dc;
+      let foundOpponentChessNumber = false;
+      let foundEmpty = false;
+      while (row >= 0 && row < 8 && column >= 0 && column < 8) {
+        if (checkArray[row][column] === opponentChessNumber) {
+          do {
+            row += dr;
+            column += dc;
+            if (row >= 0 && row < 8 && column >= 0 && column < 8) {
+              if (checkArray[row][column] === opponentChessNumber) {
+                continue;
+              } else if (checkArray[row][column] === '.') {
+                foundEmpty = true;
+                possibleMoves.push([row, column])
+                break;
+              }
+            } else {
+              break;
+            }
+          } while (true)
+        } 
+        row += dr;
+        column += dc;
+      }
+    }
+  }
+
+  // put the possible moves into checkArray, possible moves are marked as '3'
+  possibleMoves.forEach(([r, c]) => {
+    checkArray[r] = checkArray[r].split('');
+    checkArray[r][c] = '3';
+    checkArray[r] = checkArray[r].join('');
+  })
+
+  console.log('checkArray = ', checkArray)  
+
+  // turn the checkArray to a chessboardArray
+  const chessboardString = convertCheckArrayToChessboard(checkArray)
   saveChessboard(chessboardString)
 }
 
@@ -143,8 +232,8 @@ function checkChess(checkArray, currentNumber) {
 
 function convertCheckArrayToChessboard(checkArray) {
   checkArray.push(' A  B  C  D  E  F  G  H')
-  const chessboardRows = checkArray.map(row => row.replace(/1/g, '🟤 ').replace(/2/g, '⚪️ ').replace(/\./g, '🟩 ')).join('\n');
-  return chessboardRows
+  const chessboard = checkArray.map(row => row.replace(/1/g, '🟤 ').replace(/2/g, '⚪️ ').replace(/3/g, '⬛️ ').replace(/\./g, '🟩 ')).join('\n');
+  return chessboard
 }
 
 function followRules(chessboard, chess) {
