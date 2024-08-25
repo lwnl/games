@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 // Use absolute path
 const filePath = path.join(__dirname, 'Othello.md');
 
-let rounds = 5
+let rounds = 10
 
 
 // initialize a 8x8 chessboard
@@ -163,7 +163,9 @@ function findBestMove(possibleMovesArray, checkArray, chess) {
   const randomIndex = Math.floor(Math.random() * maxTurnedQuantityIndexArray.length)
   const bestMoveIndex = maxTurnedQuantityIndexArray[randomIndex]
   const bestMove = possibleMovesArray[bestMoveIndex]
-  console.log('bestMoveIndex:',bestMoveIndex,', best move coordinates: ',(bestMove[0] + 1) + 'abcdefgh'[bestMove[1]],', quantity of turned: ', turnedQuantityForEach[bestMoveIndex])
+  console.log('maxTurnedQuantity: ', maxTurnedQuantity)
+  console.log('maxTurnedQuantityIndexArray: ', maxTurnedQuantityIndexArray)
+  console.log('bestMoveIndex:',bestMoveIndex,', best move coordinates: ',(bestMove[0] + 1) + 'abcdefgh'[bestMove[1]])
   return {
     row: bestMove[0] + 1,
     column: 'abcdefgh'[bestMove[1]]
