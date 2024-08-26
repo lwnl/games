@@ -1,0 +1,6 @@
+{
+  "watch": ["webgame"],                   
+  "ext": "ts",                       
+  "exec": "tsc --watch",             
+  "ignore": ["dist/*"]                
+}

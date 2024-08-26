@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./webgame/dist",
+    "rootDir": "./webgame/src",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "include": ["webgame/src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
