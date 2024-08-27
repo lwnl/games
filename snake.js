@@ -4,6 +4,8 @@ import readline from 'readline';
 import readlineSync from 'readline-sync';
 import { fileURLToPath } from 'url';
 
+snake();
+
 function snake() {
 
   // set the input mode of the terminal
