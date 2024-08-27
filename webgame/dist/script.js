@@ -119,7 +119,7 @@ function undo() {
         const gameBoard = document.querySelector('.game-board');
         const cells = gameBoard.querySelectorAll('.cell');
         const lastStep = stepsArray.pop();
-        console.log('Last Step:', lastStep); // 添加日志输出以检查 lastStep 内容
+        // console.log('Last Step:', lastStep); // check the last step
         if (lastStep.oldBox && lastStep.newBox) {
             const oldBoxIndex = (lastStep.oldBox.row - 1) * 8 + (lastStep.oldBox.col - 1);
             const newBoxIndex = (lastStep.newBox.row - 1) * 8 + (lastStep.newBox.col - 1);
@@ -133,7 +133,7 @@ function undo() {
             const oldPlayerCell = cells[oldPlayerIndex];
             const newPlayerCell = cells[newPlayerIndex];
             move(newPlayerCell, oldPlayerCell);
-            currentRow = lastStep.oldPlayer.row; // 更新当前玩家位置
+            currentRow = lastStep.oldPlayer.row; // update the current position
             currentCol = lastStep.oldPlayer.col;
         }
         steps--;

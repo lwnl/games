@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * data type for the element of the game board grid.
  * @type {Position}
@@ -152,7 +150,7 @@ function undo(): void {
         const gameBoard = document.querySelector('.game-board') as HTMLElement;
         const cells = gameBoard.querySelectorAll('.cell') as NodeListOf<HTMLElement>;
         const lastStep = stepsArray.pop()!;
-        console.log('Last Step:', lastStep); // 添加日志输出以检查 lastStep 内容
+        // console.log('Last Step:', lastStep); // check the last step
 
         if (lastStep.oldBox && lastStep.newBox) {
             const oldBoxIndex = (lastStep.oldBox.row - 1) * 8 + (lastStep.oldBox.col - 1);
@@ -169,7 +167,7 @@ function undo(): void {
             const newPlayerCell = cells[newPlayerIndex];
             move(newPlayerCell, oldPlayerCell);
 
-            currentRow = lastStep.oldPlayer.row;  // 更新当前玩家位置
+            currentRow = lastStep.oldPlayer.row;  // update the current position
             currentCol = lastStep.oldPlayer.col;
         }
 
