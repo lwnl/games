@@ -100,7 +100,7 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
     const step = document.querySelector('.step') as HTMLElement;
     if (newCellOfPlayer && !newCellOfPlayer.classList.contains('wall')) {
         if (newCellOfPlayer.classList.contains('box')) {
-            // If the player moves onto a box, calculate the new box position
+            // If the player moves onto a box, calculate the new box position in the same direction
             const newBoxRow = newRowOfPlayer + rowOffset;
             const newBoxCol = newColOfPlayer + colOffset;
             const newBoxIndex = (newBoxRow - 1) * 8 + (newBoxCol - 1);
