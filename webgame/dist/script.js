@@ -17,6 +17,11 @@ let currentRow = initialPlayerPosition.row;
 let currentCol = initialPlayerPosition.col;
 let steps = 0;
 /**
+ * Initial stepsArray
+ * @type {step[]}
+ */
+const stepsArray = [];
+/**
  * Event handler for keyboard input to move the player.
  * @param {KeyboardEvent} event - The keyboard event.
  */
@@ -81,6 +86,11 @@ function checkAndMove(rowOffset, colOffset) {
                 // Move the box and player
                 move(newCellOfPlayer, newBoxCell); // Move the box
                 move(playerCell, newCellOfPlayer, newRowOfPlayer, newColOfPlayer); // Move the player
+                const oldBox = { row: newRowOfPlayer, col: newColOfPlayer };
+                const newBox = { row: newBoxRow, col: newBoxCol };
+                const newPlayer = { row: currentRow, col: currentCol };
+                const oldPlayer = { row: currentRow - rowOffset, col: currentCol - colOffset };
+                stepsArray.push({ oldBox, newBox, oldPlayer, newPlayer });
                 steps++;
                 score.textContent = `Steps: ${steps}`;
                 // check if the box is placed on a goal position
@@ -93,9 +103,42 @@ function checkAndMove(rowOffset, colOffset) {
         else {
             // Normal move (no box encountered)
             move(playerCell, newCellOfPlayer, newRowOfPlayer, newColOfPlayer);
+            const newPlayer = { row: currentRow, col: currentCol };
+            const oldPlayer = { row: currentRow - rowOffset, col: currentCol - colOffset };
+            stepsArray.push({ oldPlayer, newPlayer });
             steps++;
             score.textContent = `Steps: ${steps}`;
         }
+    }
+}
+/**
+ * Event handler for undo button click.
+ */
+function undo() {
+    if (stepsArray.length > 0) {
+        const gameBoard = document.querySelector('.game-board');
+        const cells = gameBoard.querySelectorAll('.cell');
+        const lastStep = stepsArray.pop();
+        console.log('Last Step:', lastStep); // 添加日志输出以检查 lastStep 内容
+        if (lastStep.oldBox && lastStep.newBox) {
+            const oldBoxIndex = (lastStep.oldBox.row - 1) * 8 + (lastStep.oldBox.col - 1);
+            const newBoxIndex = (lastStep.newBox.row - 1) * 8 + (lastStep.newBox.col - 1);
+            const oldBoxCell = cells[oldBoxIndex];
+            const newBoxCell = cells[newBoxIndex];
+            move(newBoxCell, oldBoxCell);
+        }
+        if (lastStep.oldPlayer && lastStep.newPlayer) {
+            const oldPlayerIndex = (lastStep.oldPlayer.row - 1) * 8 + (lastStep.oldPlayer.col - 1);
+            const newPlayerIndex = (lastStep.newPlayer.row - 1) * 8 + (lastStep.newPlayer.col - 1);
+            const oldPlayerCell = cells[oldPlayerIndex];
+            const newPlayerCell = cells[newPlayerIndex];
+            move(newPlayerCell, oldPlayerCell);
+            currentRow = lastStep.oldPlayer.row; // 更新当前玩家位置
+            currentCol = lastStep.oldPlayer.col;
+        }
+        steps--;
+        const score = document.querySelector('.score');
+        score.textContent = `Steps: ${steps}`;
     }
 }
 /**

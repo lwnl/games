@@ -34,9 +34,13 @@ body {
   transition: background-color 0.3s ease;
 }
 
-button.undo, button.redo {
+button.undo {
+  background-image: url(undo.svg);
+  background-size: cover;
+  width: 3rem;
+  height: 3rem;
   margin-inline: 0.5rem;
-  background-color: #ff4343; 
+  background-color: #ffffff00; 
   border: none;
   cursor: pointer;
 }

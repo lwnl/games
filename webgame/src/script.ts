@@ -30,6 +30,23 @@ let currentCol: number = initialPlayerPosition.col;
 let steps: number = 0;
 
 /**
+ * data type for the steps
+ * @type {step}
+ */
+type step = {
+    oldBox?: Position;
+    newBox?: Position;
+    oldPlayer: Position;
+    newPlayer: Position;
+};
+
+/**
+ * Initial stepsArray
+ * @type {step[]}
+ */
+const stepsArray: step[] = [];
+
+/**
  * Event handler for keyboard input to move the player.
  * @param {KeyboardEvent} event - The keyboard event.
  */
@@ -101,6 +118,11 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
                 // Move the box and player
                 move(newCellOfPlayer, newBoxCell); // Move the box
                 move(playerCell, newCellOfPlayer, newRowOfPlayer, newColOfPlayer); // Move the player
+                const oldBox: Position = { row: newRowOfPlayer, col: newColOfPlayer };
+                const newBox: Position = { row: newBoxRow, col: newBoxCol };
+                const newPlayer: Position = { row: currentRow, col: currentCol };
+                const oldPlayer: Position = { row: currentRow - rowOffset, col: currentCol - colOffset };
+                stepsArray.push({ oldBox, newBox, oldPlayer, newPlayer });
                 steps++;
                 score.textContent = `Steps: ${steps}`;
                 // check if the box is placed on a goal position
@@ -112,9 +134,48 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
         } else {
             // Normal move (no box encountered)
             move(playerCell, newCellOfPlayer, newRowOfPlayer, newColOfPlayer);
+            const newPlayer: Position = { row: currentRow, col: currentCol };
+            const oldPlayer: Position = { row: currentRow - rowOffset, col: currentCol - colOffset };
+            stepsArray.push({ oldPlayer, newPlayer });
             steps++;
             score.textContent = `Steps: ${steps}`;
         }
+    }
+}
+
+/**
+ * Event handler for undo button click.
+ */
+
+function undo(): void {
+    if (stepsArray.length > 0) {
+        const gameBoard = document.querySelector('.game-board') as HTMLElement;
+        const cells = gameBoard.querySelectorAll('.cell') as NodeListOf<HTMLElement>;
+        const lastStep = stepsArray.pop()!;
+        console.log('Last Step:', lastStep); // 添加日志输出以检查 lastStep 内容
+
+        if (lastStep.oldBox && lastStep.newBox) {
+            const oldBoxIndex = (lastStep.oldBox.row - 1) * 8 + (lastStep.oldBox.col - 1);
+            const newBoxIndex = (lastStep.newBox.row - 1) * 8 + (lastStep.newBox.col - 1);
+            const oldBoxCell = cells[oldBoxIndex];
+            const newBoxCell = cells[newBoxIndex];
+            move(newBoxCell, oldBoxCell);
+        }
+
+        if (lastStep.oldPlayer && lastStep.newPlayer) {
+            const oldPlayerIndex = (lastStep.oldPlayer.row - 1) * 8 + (lastStep.oldPlayer.col - 1);
+            const newPlayerIndex = (lastStep.newPlayer.row - 1) * 8 + (lastStep.newPlayer.col - 1);
+            const oldPlayerCell = cells[oldPlayerIndex];
+            const newPlayerCell = cells[newPlayerIndex];
+            move(newPlayerCell, oldPlayerCell);
+
+            currentRow = lastStep.oldPlayer.row;  // 更新当前玩家位置
+            currentCol = lastStep.oldPlayer.col;
+        }
+
+        steps--;
+        const score = document.querySelector('.score') as HTMLElement;
+        score.textContent = `Steps: ${steps}`;
     }
 }
 
@@ -200,7 +261,7 @@ function resetGame(): void {
             boxCell.style.backgroundImage = 'url("box1.svg")';
         } else {
             boxCell.style.backgroundImage = 'url("box.svg")';
-        }        
+        }
     });
 
     // Reset current position
