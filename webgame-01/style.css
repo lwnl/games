@@ -23,10 +23,14 @@ body {
   color: white;
 }
 
-#timer {
+#timer, #steps {
   background-color: red;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
+}
+
+#steps {
+  background-color: green;
 }
 
 .undo-button,
@@ -41,7 +45,14 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.undo-button:hover,
+.undo-button {
+  background-color: green;
+}
+
+.undo-button:hover {
+  background-color: #43ff43;
+}
+
 .reset-button:hover {
   background-color: #ff4343;
 }
@@ -62,7 +73,7 @@ body {
 }
 
 .cell-1 {
-  background-image: url(lawn.svg);
+  background-image: url(tree.svg);
   background-size: cover;
 }
 
@@ -88,6 +99,22 @@ body {
 
 .empty {
   background-color: #f0f0f0;
+}
+
+.swing {
+  animation: swing 2s infinite ease-in-out;
+}
+
+@keyframes swing {
+  0% {
+      transform: rotate(-15deg);
+  }
+  50% {
+      transform: rotate(15deg);
+  }
+  100% {
+      transform: rotate(-15deg);
+  }
 }
 
 @media (max-width: 768px) {

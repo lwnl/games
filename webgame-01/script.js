@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const gameBoard = document.querySelector(".game-board");
   const initialGameState = gameBoard.innerHTML;
+  const stepsDisplay = document.getElementById("steps");
   let playerPosition = { row: 2, col: 2 };
   let previousStates = [];
   let timer;
   let timerDuration = 60000;
+  let steps = 0;
   let timeRemaining = timerDuration;
   let timerStarted = false;
 
@@ -67,7 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
       newCell.classList.add("player");
       playerPosition.row = newRow;
       playerPosition.col = newCol;
-
+      steps++;
+      stepsDisplay.textContent = `Schritte: ${steps}`;
       checkWinCondition();
     }
   }
@@ -94,7 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (allGoalsFilled) {
       clearInterval(timer);
-      alert("Du hast gewonnen!");
+      const player = document.querySelector('.player');
+        if (player) {
+            player.classList.add('swing');
+        }
+        setTimeout(() => alert("Du hast gewonnen!"), 100);
     }
   }
 
