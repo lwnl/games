@@ -1,2 +1,1 @@
-
-    case '3 - Greedy snake':
+    playAndSave(player_1);
