@@ -27,6 +27,7 @@ const initialBoxesPositions: Position[] = [
 
 let currentRow: number = initialPlayerPosition.row;
 let currentCol: number = initialPlayerPosition.col;
+let steps: number = 0;
 
 /**
  * Event handler for keyboard input to move the player.
@@ -81,6 +82,7 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
     const newCellOfPlayer = cells[newIndexOfPlayer];
 
     // Ensure the new cell exists and is not a wall
+    const score = document.querySelector('.score') as HTMLElement;
     if (newCellOfPlayer && !newCellOfPlayer.classList.contains('wall')) {
         if (newCellOfPlayer.classList.contains('box')) {
             // If the player moves onto a box, calculate the new box position
@@ -99,7 +101,8 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
                 // Move the box and player
                 move(newCellOfPlayer, newBoxCell); // Move the box
                 move(playerCell, newCellOfPlayer, newRowOfPlayer, newColOfPlayer); // Move the player
-                
+                steps++;
+                score.textContent = `Steps: ${steps}`;
                 // check if the box is placed on a goal position
                 if (newBoxCell.classList.contains('goal')) {
                     newBoxCell.style.backgroundImage = 'url("box1.svg")';
@@ -109,6 +112,8 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
         } else {
             // Normal move (no box encountered)
             move(playerCell, newCellOfPlayer, newRowOfPlayer, newColOfPlayer);
+            steps++;
+            score.textContent = `Steps: ${steps}`;
         }
     }
 }
@@ -170,7 +175,7 @@ function resetGame(): void {
     const gameBoard = document.querySelector('.game-board') as HTMLElement;
     const cells = gameBoard.querySelectorAll('.cell') as NodeListOf<HTMLElement>;
 
-    // Clear all boxes and player
+    // Clear playe and rall boxes
     cells.forEach(cell => {
         if (cell.classList.contains('player')) {
             cell.classList.remove('player');
@@ -191,10 +196,17 @@ function resetGame(): void {
         const boxIndex = (pos.row - 1) * 8 + (pos.col - 1);
         const boxCell = cells[boxIndex];
         boxCell.classList.add('box');
-        boxCell.style.backgroundImage = 'url("box.svg")';
+        if (boxCell.classList.contains('goal')) {
+            boxCell.style.backgroundImage = 'url("box1.svg")';
+        } else {
+            boxCell.style.backgroundImage = 'url("box.svg")';
+        }        
     });
 
     // Reset current position
     currentRow = initialPlayerPosition.row;
     currentCol = initialPlayerPosition.col;
+    steps = 0;
+    const score = document.querySelector('.score') as HTMLElement;
+    score.textContent = `Steps: ${steps}`;
 }

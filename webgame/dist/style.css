@@ -71,17 +71,22 @@ button.undo, button.redo {
   background-size: cover;
 }
 
-.box {
-  background-image: url(box.svg);
-  background-size: cover;
-}
 
 .outside {
   background-image: url(lawn.svg);
 }
 
+.box {
+  background-image: url(box.svg);
+  background-size: cover;
+}
 .goal {
   background-image: url(target.svg);
+  background-size: cover;
+}
+
+.goal.box {
+  background-image: url(box1.svg);
   background-size: cover;
 }
 
