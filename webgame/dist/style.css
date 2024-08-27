@@ -75,6 +75,21 @@ button.undo {
   background-size: cover;
 }
 
+.swing {
+  animation: swing 2s infinite ease-in-out;
+}
+
+@keyframes swing {
+  0% {
+      transform: rotate(-15deg);
+  }
+  50% {
+      transform: rotate(15deg);
+  }
+  100% {
+      transform: rotate(-15deg);
+  }
+}
 
 .outside {
   background-image: url(lawn.svg);

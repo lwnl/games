@@ -99,7 +99,7 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
     const newCellOfPlayer = cells[newIndexOfPlayer];
 
     // Ensure the new cell exists and is not a wall
-    const score = document.querySelector('.score') as HTMLElement;
+    const step = document.querySelector('.step') as HTMLElement;
     if (newCellOfPlayer && !newCellOfPlayer.classList.contains('wall')) {
         if (newCellOfPlayer.classList.contains('box')) {
             // If the player moves onto a box, calculate the new box position
@@ -124,7 +124,7 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
                 const oldPlayer: Position = { row: currentRow - rowOffset, col: currentCol - colOffset };
                 stepsArray.push({ oldBox, newBox, oldPlayer, newPlayer });
                 steps++;
-                score.textContent = `Steps: ${steps}`;
+                step.textContent = `Steps: ${steps}`;
                 // check if the box is placed on a goal position
                 if (newBoxCell.classList.contains('goal')) {
                     newBoxCell.style.backgroundImage = 'url("box1.svg")';
@@ -138,7 +138,7 @@ function checkAndMove(rowOffset: number, colOffset: number): void {
             const oldPlayer: Position = { row: currentRow - rowOffset, col: currentCol - colOffset };
             stepsArray.push({ oldPlayer, newPlayer });
             steps++;
-            score.textContent = `Steps: ${steps}`;
+            step.textContent = `Steps: ${steps}`;
         }
     }
 }
@@ -174,8 +174,8 @@ function undo(): void {
         }
 
         steps--;
-        const score = document.querySelector('.score') as HTMLElement;
-        score.textContent = `Steps: ${steps}`;
+        const step = document.querySelector('.step') as HTMLElement;
+        step.textContent = `Steps: ${steps}`;
     }
 }
 
@@ -222,10 +222,12 @@ function move(oldCell: HTMLElement, newCell: HTMLElement, newRow?: number, newCo
 function checkWin(): void {
     const gameBoard = document.querySelector('.game-board') as HTMLElement;
     const targets = gameBoard.querySelectorAll('.goal') as NodeListOf<HTMLElement>;
+    const player = gameBoard.querySelector('.player') as HTMLElement;
 
     const targetsArray = Array.from(targets);
     if (targetsArray.every(target => target.classList.contains('box'))) {
-        alert('You win!');
+        player.classList.add('swing');
+        setTimeout(() => { alert('You win!'); }, 100);
     }
 }
 
@@ -268,6 +270,6 @@ function resetGame(): void {
     currentRow = initialPlayerPosition.row;
     currentCol = initialPlayerPosition.col;
     steps = 0;
-    const score = document.querySelector('.score') as HTMLElement;
-    score.textContent = `Steps: ${steps}`;
+    const step = document.querySelector('.step') as HTMLElement;
+    step.textContent = `Steps: ${steps}`;
 }
