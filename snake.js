@@ -18,7 +18,7 @@ function snake() {
   let headCoordinateArray = [[19, 11]];
   let currentDirection = ''
   let bodyLength = 0;
-  let speed = 300; // Speed of the snake
+  let speed = 250; // Speed of the snake
   let n = 5; // Number of food
   let foodArray = [];
   let gameInterval = null;
