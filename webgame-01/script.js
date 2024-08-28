@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let playerPosition = { row: 2, col: 2 };
   let previousStates = [];
   let timer;
-  let timerDuration = 60000;
+  let timerDuration = 30000;
   let steps = 0;
   let timeRemaining = timerDuration;
   let timerStarted = false;
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (timeRemaining <= 0) {
         clearInterval(timer);
-        setTimeout(() =>alert("Zeit abgelaufen! Du hast verloren."), 300);
+        setTimeout(() => alert("Zeit abgelaufen! Du hast verloren."), 300);
         resetGame();
       } else {
         updateTimerDisplay();
@@ -98,14 +98,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (allGoalsFilled) {
       clearInterval(timer);
       const player = document.querySelector('.player');
-        if (player) {
-            player.classList.add('swing');
-        }
-        setTimeout(() => {
-          alert("Du hast gewonnen!")
-          resetGame();
-        }, 300);
-        
+      if (player) {
+        player.classList.add('swing');
+      }
+      setTimeout(() => {
+        alert("Du hast gewonnen!")
+        gameBoard.innerHTML = 'Nächstes Level wird geladen...';
+        stepsDisplay.textContent = `Schritte: 0`;
+        previousStates = [];
+        timerStarted = false;
+        clearInterval(timer);
+        timeRemaining = timerDuration;
+        updateTimerDisplay();
+        // resetGame();
+      }, 300);
+
     }
   }
 
@@ -117,6 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(timer);
     timeRemaining = timerDuration;
     updateTimerDisplay();
+    steps = 0;
+    stepsDisplay.textContent = `Schritte: ${steps}`;
   }
 
   function undoMove() {
