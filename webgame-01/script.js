@@ -125,6 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
         playerPosition.row = Math.floor(index / 8);
         playerPosition.col = index % 8;
       }
+      steps--;
+      stepsDisplay.textContent = `Schritte: ${steps}`;
     }
   }
 
