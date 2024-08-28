@@ -105,6 +105,13 @@ body {
   animation: swing 2s infinite ease-in-out;
 }
 
+.nextLevel {
+  font-size: 2rem;
+  color: white;
+  display: block;
+  background-color: black;
+}
+
 @keyframes swing {
   0% {
       transform: rotate(-15deg);

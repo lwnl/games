@@ -104,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         alert("Du hast gewonnen!")
         gameBoard.innerHTML = 'Nächstes Level wird geladen...';
+        gameBoard.classList.add('nextLevel');
         stepsDisplay.textContent = `Schritte: 0`;
         previousStates = [];
         timerStarted = false;

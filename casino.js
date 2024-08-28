@@ -3,8 +3,8 @@ import chalk from 'chalk';
 
 export class RandomNumberGame {
   constructor() {
-    this.bankroll = 100;
-    this.numbers = [];
+    this.bankroll = 70;
+    this.numbers = [0,1,2];
     this.gameOver = false;
     this.rl = readline.createInterface({
       input: process.stdin,
@@ -15,9 +15,10 @@ export class RandomNumberGame {
   generateRandomNumbers() {
     this.numbers = [];
     for (let i = 0; i < 3; i++) {
-      if (Math.random() < 0.2) {
+      const random = Math.random();
+      if (random < 0.2) {
         this.numbers.push(0);
-      } else if (Math.random() < 0.5) {
+      } else if (random < 0.5) {
         this.numbers.push(1);
       } else {
         this.numbers.push(2);
@@ -52,8 +53,13 @@ export class RandomNumberGame {
   }
 
   play() {
+    if (this.bankroll <= 0) {
+      console.log(chalk.red("You don't have enough money to play. Goodbye!"));
+      this.rl.close(); //process ends
+      return;
+    } 
     let bet = 5
-    if (this.gameOver) return;
+    // if (this.gameOver) return;
 
     let spins = 0;
     const maxSpins = 10;
@@ -81,7 +87,7 @@ export class RandomNumberGame {
 🎉 JACKPOT! You won! bankroll + ${bonus} 🎉
 Your bankroll is ${this.bankroll}, bet : ${bet}
 `));
-          this.gameOver = true;
+          // this.gameOver = true;
           this.askRestart(bet);
         } else {
           this.bankroll -= bet;
@@ -97,7 +103,7 @@ Your bankroll is ${this.bankroll}, bet : ${bet}
   }
 
   askRestart(bet) {
-    if (bet <= 0) {
+    if (this.bankroll <= 0) {
       console.log(chalk.red("You don't have enough money to play. Goodbye!"));
       this.rl.close();
       return;
@@ -121,12 +127,17 @@ Your bankroll is ${this.bankroll}, bet : ${bet}
   }
 
   restart() {
-    this.gameOver = false;
-    console.log(chalk.blue.bold("\n🔄 Game restarted. Let's play again!\n"));
+    // this.gameOver = false;
+    // console.log(chalk.blue.bold("\n🔄 Game restarted. Let's play again!\n"));
     this.play();
   }
 
   start() {
+    this.renderSlotMachine()
+    console.log(chalk.yellow.bold(`
+🎰 Welcome to the Slot Machine Game! 🎰
+💰 Your bankroll is $${this.bankroll}, bet is $5 💰
+`));
     this.rl.question(
       chalk.magenta("🎰 Press Enter to spin the slots or type 'exit' to quit: "),
       (input) => {
