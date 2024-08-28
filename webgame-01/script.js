@@ -10,6 +10,29 @@ document.addEventListener("DOMContentLoaded", () => {
   let timeRemaining = timerDuration;
   let timerStarted = false;
 
+  document.querySelector(".reset-button").addEventListener("click", resetGame);
+  document.querySelector(".undo-button").addEventListener("click", undoMove);
+
+  document.addEventListener("keydown", (event) => {
+    const key = event.key;
+    let newRow = playerPosition.row;
+    let newCol = playerPosition.col;
+
+    if (key === "ArrowUp") {
+      newRow -= 1;
+    } else if (key === "ArrowDown") {
+      newRow += 1;
+    } else if (key === "ArrowLeft") {
+      newCol -= 1;
+    } else if (key === "ArrowRight") {
+      newCol += 1;
+    }
+
+    saveState();
+    movePlayer(newRow, newCol);
+  });
+
+ 
   function updateTimerDisplay() {
     const timerDisplay = document.getElementById("timer");
     const seconds = Math.ceil(timeRemaining / 1000);
@@ -144,25 +167,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  document.addEventListener("keydown", (event) => {
-    const key = event.key;
-    let newRow = playerPosition.row;
-    let newCol = playerPosition.col;
 
-    if (key === "ArrowUp") {
-      newRow -= 1;
-    } else if (key === "ArrowDown") {
-      newRow += 1;
-    } else if (key === "ArrowLeft") {
-      newCol -= 1;
-    } else if (key === "ArrowRight") {
-      newCol += 1;
-    }
-
-    saveState();
-    movePlayer(newRow, newCol);
-  });
-
-  document.querySelector(".reset-button").addEventListener("click", resetGame);
-  document.querySelector(".undo-button").addEventListener("click", undoMove);
 });
