@@ -10,6 +10,28 @@ document.addEventListener("DOMContentLoaded", () => {
   let timeRemaining = timerDuration;
   let timerStarted = false;
 
+  function playSound() {
+    const player = playerInit({
+      player: "mpg123",
+    });
+    
+    const audio = player.play("background.mp3");
+    audio.on("close", () => {
+      console.log("audio closed");
+      process.exit(0);
+    });
+    
+    // handle keypress "esc"
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    
+    process.stdin.on("keypress", (_, key) => {
+      if (key.name === "escape") {
+        audio.kill();
+      }
+    });
+  }
+
   function updateTimerDisplay() {
     const timerDisplay = document.getElementById("timer");
     const seconds = Math.ceil(timeRemaining / 1000);

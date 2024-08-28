@@ -30,7 +30,7 @@ inquirer.prompt(menuOptions).then(answers => {
       othello();
       break;
     case '3 - Greedy snake':
-      GreedySnake();
+      // GreedySnake();
       break;
     case 'Exit':
       console.log('Exiting...');

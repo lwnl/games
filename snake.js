@@ -4,7 +4,7 @@ import readline from 'readline';
 import readlineSync from 'readline-sync';
 import { fileURLToPath } from 'url';
 
-// snake();
+snake();
 
 function snake() {
 

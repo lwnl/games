@@ -152,7 +152,8 @@ function othello() {
     chess = chess === '🟤' ? '1' : '2';
   
     const positionArray = possibleMovesArray.map(move => (move[0] + 1) + 'abcdefgh'[move[1]])
-  
+    
+    // get the turnedQuantity for each possible move and save them in an array called turnedQuantityForEach
     const turnedQuantityForEach = positionArray.map(move => {
       // console.log('checkArray: ', checkArray, 'move: ', move)
       return checkChess(checkArray, chess, move).turnedQuantity
