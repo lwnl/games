@@ -102,7 +102,7 @@ body {
 }
 
 .swing {
-  animation: swing 2s infinite ease-in-out;
+  animation: swing 2s infinite linear;
 }
 
 .nextLevel {
@@ -114,13 +114,10 @@ body {
 
 @keyframes swing {
   0% {
-      transform: rotate(-15deg);
-  }
-  50% {
-      transform: rotate(15deg);
+      transform: rotate(0deg);
   }
   100% {
-      transform: rotate(-15deg);
+      transform: rotate(360deg);
   }
 }
 
