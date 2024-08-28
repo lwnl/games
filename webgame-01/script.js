@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (timeRemaining <= 0) {
         clearInterval(timer);
-        alert("Zeit abgelaufen! Du hast verloren.");
+        setTimeout(() =>alert("Zeit abgelaufen! Du hast verloren."), 300);
         resetGame();
       } else {
         updateTimerDisplay();
@@ -101,7 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (player) {
             player.classList.add('swing');
         }
-        setTimeout(() => alert("Du hast gewonnen!"), 100);
+        setTimeout(() => {
+          alert("Du hast gewonnen!")
+          resetGame();
+        }, 300);
+        
     }
   }
 
