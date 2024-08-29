@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     saveState();
     movePlayer(newRow, newCol);
   });
-
  
   function updateTimerDisplay() {
     const timerDisplay = document.getElementById("timer");
@@ -166,6 +165,4 @@ document.addEventListener("DOMContentLoaded", () => {
       stepsDisplay.textContent = `Schritte: ${steps}`;
     }
   }
-
-
 });

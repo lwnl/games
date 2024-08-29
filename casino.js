@@ -109,7 +109,7 @@ Your bankroll is ${this.bankroll}, bet : ${bet}
       return;
     } else {
       this.rl.question(
-        chalk.magenta("🔄 Do you want to restart the game? (Yes/no): "),
+        chalk.magenta("🔄 Do you want to continue? (Yes/no): "),
         (answer) => {
           if (answer.trim().toLowerCase() === 'yes' || answer.trim() === '') {
             this.restart(); // Restart game if 'yes' or Enter
