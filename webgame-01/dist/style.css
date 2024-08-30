@@ -18,6 +18,14 @@ body {
   margin-bottom: 1rem;
 }
 
+.levelNumber {
+  height: 2.5rem;
+  color: rgb(255, 255, 255);
+  background-color: #dd4011;
+  font-size: 1.5rem;
+  border-radius: 0.5rem;
+}
+
 .timer-container {
   align-items: center;
   font-size: 1.5rem;
@@ -25,8 +33,12 @@ body {
 }
 
 #timer, #steps {
+  box-sizing: border-box;
+  display: inline-block;
   background-color: red;
-  padding: 0.5rem 1rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
 }
 
@@ -36,8 +48,8 @@ body {
 
 .undo-button,
 .reset-button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
   color: white;
   background-color: red;
   border: none;

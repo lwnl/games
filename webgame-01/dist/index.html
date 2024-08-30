@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="fa">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <script  type="module" src="script.js" defer></script>
-    <title>Game</title>
-  </head>
-  <body>
-    <div class="header-container">
-      <div class="timer-container">
-        <span id="timer">30s</span>
-        <span id="steps">Schritte: 0</span>
-      </div>
-      <div class="controls-container">
-        <button class="undo-button">Undo</button>
-        <button class="reset-button">Reset Game</button>
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="script.js" defer></script>
+  <title>Game</title>
+</head>
+
+<body>
+  <div class="header-container">
+    <div class="timer-container">
+      <span id="timer">30s</span>
+      <span id="steps">Schritte: 0</span>
     </div>
+    <select class="levelNumber">
+      <option value="0">Level 0</option>
+      <option value="1">Level 1</option>
+    </select>
+    <div class="controls-container">
+      <button class="undo-button">Undo</button>
+      <button class="reset-button">Reset Game</button>
+    </div>
+  </div>
 
-    <div class="game-board"></div>
+  <div class="game-board"></div>
 
-  </body>
+</body>
+
 </html>

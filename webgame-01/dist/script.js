@@ -14,10 +14,18 @@ let timerStarted = false;
 let level = 0
 let columns = 8
 let gameBoard = document.querySelector(".game-board");
-gameBoard.innerHTML = creatGameBoard(level)
+
 
 document.querySelector(".reset-button").addEventListener("click", resetGame());
 document.querySelector(".undo-button").addEventListener("click", undoMove);
+
+const levelNumber = document.querySelector('.levelNumber')
+
+levelNumber.addEventListener('change', () => {
+  level = Number(levelNumber.value)
+  gameBoard.innerHTML = creatGameBoard(level)
+})
+
 
 document.addEventListener("keydown", (event) => {
   const key = event.key;
@@ -179,7 +187,8 @@ function checkWinCondition() {
       if (level === levels.length) {
         alert("Du hast alle Level geschafft!");
         level = 0;
-      }
+      } 
+      levelNumber.value = level.toString()
       resetGame();
     }, 300);
 
