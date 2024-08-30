@@ -23,7 +23,7 @@ const levelNumber = document.querySelector('.levelNumber')
 
 levelNumber.addEventListener('change', () => {
   level = Number(levelNumber.value)
-  gameBoard.innerHTML = creatGameBoard(level)
+  resetGame()
 })
 
 
