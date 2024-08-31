@@ -1,7 +1,5 @@
 import levels from './levels.js';
 
-
-
 const stepsDisplay = document.getElementById("steps");
 let playerPosition = { row: 3, col: 3 };
 let previousStates = [];
@@ -16,21 +14,33 @@ let columns = 8
 let gameBoard = document.querySelector(".game-board");
 
 
-document.querySelector(".reset-button").addEventListener("click", resetGame());
+const backgroundMusic = new Audio('./music/background.mp3')
+backgroundMusic.volume = 0.2
+backgroundMusic.loop = true;
+
+
+document.querySelector(".reset-button").addEventListener("click", () => {
+  playLoadSound()
+  resetGame()
+});
 document.querySelector(".undo-button").addEventListener("click", undoMove);
 
 const levelNumber = document.querySelector('.levelNumber')
 
 levelNumber.addEventListener('change', () => {
   level = Number(levelNumber.value)
+  playLoadSound()
   resetGame()
 })
 
-
+resetGame()
 document.addEventListener("keydown", (event) => {
   const key = event.key;
   let newRow = playerPosition.row;
   let newCol = playerPosition.col;
+
+  if (backgroundMusic.paused)
+    backgroundMusic.play();
 
   if (key === "ArrowUp") {
     newRow -= 1;
@@ -105,8 +115,11 @@ function startTimer() {
 
     if (timeRemaining <= 0) {
       clearInterval(timer);
-      setTimeout(() => alert("Zeit abgelaufen! Du hast verloren."), 300);
-      resetGame();
+      setTimeout(() => {
+        alert("Zeit abgelaufen! Du hast verloren.")
+        resetGame()
+      }, 300);
+      
     } else {
       updateTimerDisplay();
     }
@@ -141,6 +154,7 @@ function movePlayer(newRow, newCol) {
       ) {
         moveBox(newCell, nextBoxCell);
       } else {
+        playFailSound()
         return;
       }
     }
@@ -149,10 +163,42 @@ function movePlayer(newRow, newCol) {
     newCell.classList.add("player");
     playerPosition.row = newRow;
     playerPosition.col = newCol;
+    playMoveSound()
     steps++;
     stepsDisplay.textContent = `Schritte: ${steps}`;
     checkWinCondition();
+  } else {
+    playFailSound()
   }
+}
+
+function playNextLevelSound() {
+  const soundEffectNextLevel = new Audio('./music/nextLevel.mp3');
+  soundEffectNextLevel.volume = 1
+  soundEffectNextLevel.play();
+}
+
+function playCongraSound() {
+  const soundEffectCongra = new Audio('./music/congratulations.mp3');
+  soundEffectCongra.volume = 1
+  soundEffectCongra.play();
+}
+
+function playLoadSound() {
+  const soundEffectLoad = new Audio('./music/load.mp3');
+  soundEffectLoad.volume = 1
+  soundEffectLoad.play();
+}
+function playFailSound() {
+  const soundEffectFail = new Audio('./music/fail.mp3');
+  soundEffectFail.volume = 1
+  soundEffectFail.play();
+}
+
+function playMoveSound() {
+  const soundEffectMove = new Audio('./music/move.mp3');
+  soundEffectMove.volume = 1
+  soundEffectMove.play();
 }
 
 function moveBox(boxCell, newCell) {
@@ -179,6 +225,7 @@ function checkWinCondition() {
     clearInterval(timer);
     const player = document.querySelector('.player');
     if (player) {
+      playCongraSound()
       player.classList.add('swing');
     }
     setTimeout(() => {
@@ -187,17 +234,18 @@ function checkWinCondition() {
       if (level === levels.length) {
         alert("Du hast alle Level geschafft!");
         level = 0;
-      } 
+      }
       levelNumber.value = level.toString()
+      playNextLevelSound()
       resetGame();
     }, 300);
-
   }
 }
 
 function resetGame() {
   gameBoard.innerHTML = creatGameBoard(level)
   previousStates = [];
+  backgroundMusic.pause()
   timerStarted = false;
   clearInterval(timer);
   timeRemaining = timerDuration;
@@ -216,6 +264,7 @@ function undoMove() {
       playerPosition.row = Math.floor(index / 8) + 1;
       playerPosition.col = index % 8 + 1;
     }
+    playMoveSound()
     steps--;
     stepsDisplay.textContent = `Schritte: ${steps}`;
   }

@@ -88,23 +88,23 @@ body {
 }
 
 .outside {
-  background-image: url(tree.svg);
+  background-image: url(./image/tree.svg);
   background-size: cover;
 }
 
 .wall {
-  background-image: url(wall.svg);
+  background-image: url(./image/wall.svg);
   background-color: #5d4037;
   background-size: cover;
 }
 
 .player {
-  background-image: url(character.png);
+  background-image: url(./image/character.png);
   background-size: cover;
 }
 
 .box {
-  background-image: url(box.png);
+  background-image: url(./image/box.png);
   background-size: cover;
 }
 
