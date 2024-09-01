@@ -113,13 +113,10 @@ function startTimer() {
   timer = setInterval(() => {
     timeRemaining -= 1000;
 
-    if (timeRemaining <= 0) {
+    if (timeRemaining < 0) {
       clearInterval(timer);
-      setTimeout(() => {
-        alert("Zeit abgelaufen! Du hast verloren.")
-        resetGame()
-      }, 300);
-      
+      alert("Zeit abgelaufen! Du hast verloren.")
+      resetGame()
     } else {
       updateTimerDisplay();
     }
