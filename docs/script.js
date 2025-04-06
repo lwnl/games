@@ -4,7 +4,7 @@ const stepsDisplay = document.getElementById("steps");
 let playerPosition = { row: 3, col: 3 };
 let previousStates = [];
 let timer;
-let timerDuration = 30000;
+let timerDuration = 60000;
 let steps = 0;
 let timeRemaining = timerDuration;
 let timerStarted = false;
