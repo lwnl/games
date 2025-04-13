@@ -162,7 +162,7 @@ function movePlayer(newRow, newCol) {
     playerPosition.col = newCol;
     playMoveSound()
     steps++;
-    stepsDisplay.textContent = `Schritte: ${steps}`;
+    stepsDisplay.textContent = `Steps: ${steps}`;
     checkWinCondition();
   } else {
     playFailSound()
@@ -248,7 +248,7 @@ function resetGame() {
   timeRemaining = timerDuration;
   updateTimerDisplay();
   steps = 0;
-  stepsDisplay.textContent = `Schritte: ${steps}`;
+  stepsDisplay.textContent = `Steps: ${steps}`;
 }
 
 function undoMove() {
@@ -263,6 +263,6 @@ function undoMove() {
     }
     playMoveSound()
     steps--;
-    stepsDisplay.textContent = `Schritte: ${steps}`;
+    stepsDisplay.textContent = `Steps: ${steps}`;
   }
 }
