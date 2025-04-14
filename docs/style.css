@@ -82,8 +82,8 @@ body {
   --rows: 9;
   --columns: 8;
   display: grid;
-  grid-template-columns: repeat(var(--columns), 4rem);
-  grid-template-rows: repeat(var(--rows), 4rem);
+  grid-template-columns: repeat(var(--columns), 7vw);
+  grid-template-rows: repeat(var(--rows), 7vw);
   gap: 0.1rem;
   background-color: #c2c0c0;
   padding: 0.6rem;
@@ -150,8 +150,6 @@ body {
   }
 
   .game-board {
-    grid-template-columns: repeat(var(--columns), 3rem);
-    grid-template-rows: repeat(var(--rows), 3rem);
     gap: 0.25rem;
     padding: 0.5rem;
     border-radius: 0.5rem;
