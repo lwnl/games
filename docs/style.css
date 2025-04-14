@@ -7,6 +7,7 @@ body {
   height: 100svh;
   margin: 0;
   background-color: black;
+  overflow: hidden;
 }
 
 .instructions{
@@ -81,8 +82,8 @@ body {
   --rows: 9;
   --columns: 8;
   display: grid;
-  grid-template-columns: repeat(var(--columns), 5rem);
-  grid-template-rows: repeat(var(--rows), 5rem);
+  grid-template-columns: repeat(var(--columns), 4rem);
+  grid-template-rows: repeat(var(--rows), 4rem);
   gap: 0.1rem;
   background-color: #c2c0c0;
   padding: 0.6rem;
@@ -138,8 +139,14 @@ body {
 }
 
 @media (max-width: 768px) {
+  span, button {
+    height: 2rem;
+    font-size: 1.2rem;
+  }
+
   .instructions {
     width: 450px;
+    /* margin:0; */
   }
 
   .game-board {
