@@ -2,6 +2,28 @@ const levels =
 [
   {
     levelNumber: 0,
+    matrix: {rows: 4, cols:7},
+    playerCoordinate:[3, 3],
+    outsideCoordinatesArray:[
+      [1, 1], [1, 2],                                         
+      ],
+    wallCoordinatesArray:[
+                      [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], 
+      [2, 1], [2, 2], [2, 3],                         [2, 7],
+      [3, 1],                                         [3, 7],
+      [4, 1], [4, 2], [4, 3],                         [4, 7],
+      ],
+    boxCoordinatesArray:[
+                              [3, 4], 
+                                      [4, 5], 
+    ],
+    targetCoordinatesArray:[
+              [3, 2], 
+                                              [4, 6],  
+    ],
+  },
+  {
+    levelNumber: 1,
     matrix: {rows: 9, cols:8},
     playerCoordinate:[3, 3],
     outsideCoordinatesArray:[
@@ -36,28 +58,6 @@ const levels =
                                       [6, 5], 
                               [7, 4],                 [7, 7],  
                                       [8, 5], 
-    ],
-  },
-  {
-    levelNumber: 1,
-    matrix: {rows: 4, cols:7},
-    playerCoordinate:[3, 3],
-    outsideCoordinatesArray:[
-      [1, 1], [1, 2],                                         
-      ],
-    wallCoordinatesArray:[
-                      [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], 
-      [2, 1], [2, 2], [2, 3],                         [2, 7],
-      [3, 1],                                         [3, 7],
-      [4, 1], [4, 2], [4, 3],                         [4, 7],
-      ],
-    boxCoordinatesArray:[
-                              [3, 4], 
-                                      [4, 5], 
-    ],
-    targetCoordinatesArray:[
-              [3, 2], 
-                                              [4, 6],  
     ],
   },
 ]       
