@@ -1,4 +1,4 @@
-import levels from './levels.js';
+import levels from "./levels.js";
 
 const stepsDisplay = document.getElementById("steps");
 let playerPosition = { row: 3, col: 3 };
@@ -9,38 +9,35 @@ let steps = 0;
 let timeRemaining = timerDuration;
 let timerStarted = false;
 
-let level = 0
-let columns = 8
+let level = 0;
+let columns = 8;
 let gameBoard = document.querySelector(".game-board");
 
-
-const backgroundMusic = new Audio('./music/background.mp3')
-backgroundMusic.volume = 0.2
+const backgroundMusic = new Audio("./music/background.mp3");
+backgroundMusic.volume = 0.2;
 backgroundMusic.loop = true;
 
-
 document.querySelector(".reset-button").addEventListener("click", () => {
-  playLoadSound()
-  resetGame()
+  playLoadSound();
+  resetGame();
 });
 document.querySelector(".undo-button").addEventListener("click", undoMove);
 
-const levelNumber = document.querySelector('.levelNumber')
+const levelNumber = document.querySelector(".levelNumber");
 
-levelNumber.addEventListener('change', () => {
-  level = Number(levelNumber.value)
-  playLoadSound()
-  resetGame()
-})
+levelNumber.addEventListener("change", () => {
+  level = Number(levelNumber.value);
+  playLoadSound();
+  resetGame();
+});
 
-resetGame()
+resetGame();
 document.addEventListener("keydown", (event) => {
   const key = event.key;
   let newRow = playerPosition.row;
   let newCol = playerPosition.col;
 
-  if (backgroundMusic.paused)
-    backgroundMusic.play();
+  if (backgroundMusic.paused) backgroundMusic.play();
 
   if (key === "ArrowUp") {
     newRow -= 1;
@@ -52,19 +49,26 @@ document.addEventListener("keydown", (event) => {
     newCol += 1;
   }
 
-  saveState();
   movePlayer(newRow, newCol);
 });
 
 function creatGameBoard(level) {
-  gameBoard.innerHTML = ''
-  const { levelNumber, matrix, playerCoordinate, outsideCoordinatesArray, wallCoordinatesArray, boxCoordinatesArray, targetCoordinatesArray } = levels[level]
-  const { rows, cols } = matrix
+  gameBoard.innerHTML = "";
+  const {
+    levelNumber,
+    matrix,
+    playerCoordinate,
+    outsideCoordinatesArray,
+    wallCoordinatesArray,
+    boxCoordinatesArray,
+    targetCoordinatesArray,
+  } = levels[level];
+  const { rows, cols } = matrix;
   // console.log('rows:', rows, 'cols:', cols)
-  columns = cols
+  columns = cols;
 
-  gameBoard.style.setProperty('--rows', rows.toString());
-  gameBoard.style.setProperty('--columns', cols.toString());
+  gameBoard.style.setProperty("--rows", rows.toString());
+  gameBoard.style.setProperty("--columns", cols.toString());
 
   for (let i = 1; i <= rows * cols; i++) {
     const cell = document.createElement("div");
@@ -77,24 +81,23 @@ function creatGameBoard(level) {
   playerPosition.row = playerCoordinate[0];
   playerPosition.col = playerCoordinate[1];
 
-
   outsideCoordinatesArray.forEach(([row, col]) => {
     const cell = getCell(row, col);
     cell.classList.add("outside");
-  })
+  });
   wallCoordinatesArray.forEach(([row, col]) => {
     const cell = getCell(row, col);
     cell.classList.add("wall");
-  })
+  });
   boxCoordinatesArray.forEach(([row, col]) => {
     const cell = getCell(row, col);
     cell.classList.add("box");
-  })
+  });
   targetCoordinatesArray.forEach(([row, col]) => {
     const cell = getCell(row, col);
     cell.classList.add("goal");
-  })
-  return gameBoard.innerHTML
+  });
+  return gameBoard.innerHTML;
 }
 
 function updateTimerDisplay() {
@@ -115,8 +118,8 @@ function startTimer() {
 
     if (timeRemaining < 0) {
       clearInterval(timer);
-      alert("Zeit abgelaufen! Du hast verloren.")
-      resetGame()
+      alert("Zeit abgelaufen! Du hast verloren.");
+      resetGame();
     } else {
       updateTimerDisplay();
     }
@@ -131,7 +134,7 @@ function movePlayer(newRow, newCol) {
   const newCell = getCell(newRow, newCol);
   const currentCell = getCell(playerPosition.row, playerPosition.col);
 
-  // console.log('newRow:', newRow, 'newCol:', newCol) 
+  // console.log('newRow:', newRow, 'newCol:', newCol)
   // console.log('playerPosition.row:', playerPosition.row, 'playerPosition.col:', playerPosition.col)
 
   if (!timerStarted) {
@@ -149,52 +152,55 @@ function movePlayer(newRow, newCol) {
         !nextBoxCell.classList.contains("wall") &&
         !nextBoxCell.classList.contains("box")
       ) {
+        saveState();
         moveBox(newCell, nextBoxCell);
       } else {
-        playFailSound()
+        playFailSound();
         return;
       }
+    } else {
+      saveState(); // 保存状态（正常移动时）
     }
 
     currentCell.classList.remove("player");
     newCell.classList.add("player");
     playerPosition.row = newRow;
     playerPosition.col = newCol;
-    playMoveSound()
+    playMoveSound();
     steps++;
     stepsDisplay.textContent = `Steps: ${steps}`;
     checkWinCondition();
   } else {
-    playFailSound()
+    playFailSound();
   }
 }
 
 function playNextLevelSound() {
-  const soundEffectNextLevel = new Audio('./music/nextLevel.mp3');
-  soundEffectNextLevel.volume = 1
+  const soundEffectNextLevel = new Audio("./music/nextLevel.mp3");
+  soundEffectNextLevel.volume = 1;
   soundEffectNextLevel.play();
 }
 
 function playCongraSound() {
-  const soundEffectCongra = new Audio('./music/congratulations.mp3');
-  soundEffectCongra.volume = 1
+  const soundEffectCongra = new Audio("./music/congratulations.mp3");
+  soundEffectCongra.volume = 1;
   soundEffectCongra.play();
 }
 
 function playLoadSound() {
-  const soundEffectLoad = new Audio('./music/load.mp3');
-  soundEffectLoad.volume = 1
+  const soundEffectLoad = new Audio("./music/load.mp3");
+  soundEffectLoad.volume = 1;
   soundEffectLoad.play();
 }
 function playFailSound() {
-  const soundEffectFail = new Audio('./music/fail.mp3');
-  soundEffectFail.volume = 1
+  const soundEffectFail = new Audio("./music/fail.mp3");
+  soundEffectFail.volume = 1;
   soundEffectFail.play();
 }
 
 function playMoveSound() {
-  const soundEffectMove = new Audio('./music/move.mp3');
-  soundEffectMove.volume = 1
+  const soundEffectMove = new Audio("./music/move.mp3");
+  soundEffectMove.volume = 1;
   soundEffectMove.play();
 }
 
@@ -220,29 +226,29 @@ function checkWinCondition() {
 
   if (allGoalsFilled) {
     clearInterval(timer);
-    const player = document.querySelector('.player');
+    const player = document.querySelector(".player");
     if (player) {
-      playCongraSound()
-      player.classList.add('swing');
+      playCongraSound();
+      player.classList.add("swing");
     }
     setTimeout(() => {
-      alert("Du hast gewonnen!")
+      alert("Du hast gewonnen!");
       level++;
       if (level === levels.length) {
         alert("Du hast alle Level geschafft!");
         level = 0;
       }
-      levelNumber.value = level.toString()
-      playNextLevelSound()
+      levelNumber.value = level.toString();
+      playNextLevelSound();
       resetGame();
     }, 300);
   }
 }
 
 function resetGame() {
-  gameBoard.innerHTML = creatGameBoard(level)
+  gameBoard.innerHTML = creatGameBoard(level);
   previousStates = [];
-  backgroundMusic.pause()
+  backgroundMusic.pause();
   timerStarted = false;
   clearInterval(timer);
   timeRemaining = timerDuration;
@@ -259,9 +265,9 @@ function undoMove() {
     if (playerCell) {
       const index = Array.from(gameBoard.children).indexOf(playerCell);
       playerPosition.row = Math.floor(index / 8) + 1;
-      playerPosition.col = index % 8 + 1;
+      playerPosition.col = (index % 8) + 1;
     }
-    playMoveSound()
+    playMoveSound();
     steps--;
     stepsDisplay.textContent = `Steps: ${steps}`;
   }
